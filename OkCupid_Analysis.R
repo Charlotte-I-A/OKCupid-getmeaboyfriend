@@ -47,7 +47,17 @@ View(Cleaned_profiles)
 # Plotting ----------------------------------------------------------------
 sum(Cleaned_profiles$Total_swear_words,na.rm = TRUE) 
 #There are 371 instances of the use of the words "fuck", "shit", "cunt" and/or "bitch" in the dataset
+#We only want to analyse those profiles which have swear words in them. Therefore we look at a subset of the data
 
-plot(Cleaned_profiles$Total_swear_words ~ Cleaned_profiles$age)
-#From the plot we can see that there is a higher concentration of swear words in younger people. 
-#There are only 3 instances of swear words being 3+ times; we can consider these (very rude) outliers. 
+#To only look at rows where swear words is >0:
+Contains_swearing<-subset(Cleaned_profiles, Cleaned_profiles$Total_swear_words>0)
+str(Contains_swearing) #We can see 350 profiles which have swear words in them (some have multiple)
+
+
+#From here, we can look at each variable to see which variables have a pattern with swear words
+plot(Contains_swearing$Total_swear_words ~ Contains_swearing$age)
+plot(Contains_swearing$Total_swear_words ~ Contains_swearing$height)
+#For the categorical variables these are currently stored as 'chr' variables, therefore need to push into 'as.factor' variables
+plot(Total_swear_words~(as.factor(body_type)),data = Contains_swearing)
+plot(Total_swear_words~(as.factor(diet)),data = Contains_swearing)
+. . . #to be continued. 
