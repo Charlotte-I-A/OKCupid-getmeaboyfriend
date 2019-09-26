@@ -61,3 +61,54 @@ plot(Contains_swearing$Total_swear_words ~ Contains_swearing$height)
 plot(Total_swear_words~(as.factor(body_type)),data = Contains_swearing)
 plot(Total_swear_words~(as.factor(diet)),data = Contains_swearing)
 . . . #to be continued. 
+
+
+
+
+#Code from Paula
+# Clustering --------------------------------------------------------------
+str(Cleaned_profiles)
+library(caret)
+
+
+s = Cleaned_profiles[1:10000,]
+#s <- mutate(s, Total_swear_words = ifelse(Total_swear_words>0, 1, 0))
+x = s[,-c(17:19)]
+#unique(s$Total_swear_words)
+y = s[,19]
+str(y)
+x.dist1=dist(x,method="euclidean")
+x.dist2=dist(x,method="manhattan")
+x.dist3=dist(x,method="minkowski")
+
+# Distances
+hc.single1=hclust(x.dist1,method="single",members=NULL)
+hc.single2=hclust(x.dist2,method="single",members=NULL)
+hc.single3=hclust(x.dist3,method="single",members=NULL)
+hc.single4=hclust(x.dist1,method="ward",members=NULL)
+
+plot(hc.single1)
+plot(hc.single2)
+plot(hc.single3)
+plot(hc.single4)
+
+
+hicluste1=cutree(hc.single1,k=2)
+hicluste2=cutree(hc.single2,k=2)
+hicluste3=cutree(hc.single3,k=2)
+hicluste4=cutree(hc.single4,k=2)
+#
+plot(s, col=hicluste1,main="Single Linkage - Euclidean distance")
+plot(s, col=hicluste2,main="Single Linkage - Manhattan distance")
+plot(s, col=hicluste3,main="Single Linkage - Minkowski distance")
+plot(s, col=hicluste4,main="Ward's minimum variance - Euclidean distance")
+
+table(hicluste1,y)
+table(hicluste2,y)
+table(hicluste3,y)
+table(hicluste4,y)
+
+k.s <- kmeans(x,centers=2,nstart = 10)
+plot(x,col=k.s$cluster)
+
+table(y,k.s$cluster)
